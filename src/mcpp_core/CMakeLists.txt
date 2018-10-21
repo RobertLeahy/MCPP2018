@@ -1,6 +1,7 @@
-add_library(mcpp_core INTERFACE)
-target_include_directories(mcpp_core INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
-                                               $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+add_library(mcpp_core any_storage.cpp)
+target_include_directories(mcpp_core PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
+                                            $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+target_link_libraries(mcpp_core Boost::boost)
 install(DIRECTORY "include/"
         DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 install(TARGETS mcpp_core
