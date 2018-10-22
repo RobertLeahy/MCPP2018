@@ -1,7 +1,8 @@
 PROJECT_NAME="MCPP"
 PROJECT_BRIEF="Minecraft utilities in C++"
 OUTPUT_DIRECTORY="doc"
-INPUT=${CMAKE_SOURCE_DIR}/src/core/include
+INPUT=${CMAKE_SOURCE_DIR}/src/core/include \
+      ${CMAKE_SOURCE_DIR}/src/serialization/include
 EXCLUDE_PATTERNS=
 FILE_PATTERNS=*.hpp
 RECURSIVE=YES
