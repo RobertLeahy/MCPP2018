@@ -1,2 +1,2 @@
-add_subdirectory(mcpp_core)
-add_subdirectory(mcpp_test)
+add_subdirectory(core)
+add_subdirectory(test)
