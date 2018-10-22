@@ -1,8 +1,10 @@
-add_library(core any_storage.cpp)
+add_library(core any_storage.cpp
+                 system_error.cpp)
 set_target_properties(core PROPERTIES PREFIX "mcpp_")
 target_include_directories(core PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
                                        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-target_link_libraries(core Boost::boost)
+target_link_libraries(core Boost::boost
+                           Boost::system)
 install(DIRECTORY "include/"
         DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 install(TARGETS core
