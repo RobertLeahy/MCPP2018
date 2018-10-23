@@ -1,4 +1,5 @@
 add_executable(serialization_tests main.cpp
+                                   string.cpp
                                    varint.cpp)
 target_link_libraries(serialization_tests Boost::boost
                                           Boost::system

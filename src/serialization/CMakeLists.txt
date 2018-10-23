@@ -1,4 +1,5 @@
-add_library(serialization varint.cpp)
+add_library(serialization string.cpp
+                          varint.cpp)
 set_target_properties(serialization PROPERTIES PREFIX "mcpp_")
 target_include_directories(serialization PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
                                                 $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
