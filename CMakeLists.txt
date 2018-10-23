@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8 FATAL_ERROR)
-project(mcpp LANGUAGES C CXX)
+project(mcpp LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED 1)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
@@ -8,34 +8,21 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_LIST_DIR}/cmake/modules")
-find_package(Boost 1.68.0 REQUIRED system)
+include(cmake/McppFind.cmake)
 find_package(Catch2)
 find_package(Doxygen)
-find_package(Sockets REQUIRED)
-find_package(Threads REQUIRED)
 include(GNUInstallDirs)
 if(Catch2_FOUND)
   enable_testing()
 endif()
+include(cmake/Functions.cmake)
+include(cmake/Doxygen.cmake)
 add_subdirectory(src)
-if(DOXYGEN_FOUND)
-  if(DOXYGEN_DOT_FOUND)
-    set(DOXYGEN_CONFIGURE_HAVE_DOT "HAVE_DOT=YES")
-    get_filename_component(DOXYGEN_DOT_PATH "${DOXYGEN_DOT_EXECUTABLE}" DIRECTORY)
-    file(TO_NATIVE_PATH "${DOXYGEN_DOT_PATH}" DOXYGEN_DOT_PATH)
-    set(DOXYGEN_CONFIGURE_DOT_PATH "DOT_PATH=${DOXYGEN_DOT_PATH}")
-  else()
-    set(DOXYGEN_CONFIGURE_HAVE_DOT "HAVE_DOT=NO")
-  endif()
-  configure_file(Doxyfile.in "${CMAKE_BINARY_DIR}/Doxyfile")
-  add_custom_target(doc
-                    ${DOXYGEN_EXECUTABLE}
-                    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-                    COMMENT "Running Doxygen" VERBATIM)
-  install(CODE "execute_process(COMMAND ${DOXYGEN_EXECUTABLE} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})")
-  install(DIRECTORY "${CMAKE_BINARY_DIR}/doc/html/"
-          DESTINATION "${CMAKE_INSTALL_DOCDIR}")
-endif()
-install(EXPORT McppConfig
+install(EXPORT McppTargets
         DESTINATION share/Mcpp/cmake
         NAMESPACE Mcpp::)
+install(FILES cmake/McppFind.cmake
+              cmake/McppConfig.cmake
+              cmake/modules/FindBoost.cmake
+              cmake/modules/FindSockets.cmake
+        DESTINATION share/Mcpp/cmake)
