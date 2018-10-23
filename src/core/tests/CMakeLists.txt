@@ -3,6 +3,7 @@ mcpp_add_test(core
                       main.cpp
                       polymorphic_ptr.cpp
                       system_error.cpp
+                      try_copy_n.cpp
               LIBRARIES Boost::boost
                         Boost::system
                         Catch2::Catch2
