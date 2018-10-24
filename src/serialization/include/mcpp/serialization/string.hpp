@@ -14,6 +14,8 @@
 #include <system_error>
 #include <type_traits>
 #include <utility>
+#include <mcpp/cast_output_iterator.hpp>
+#include <mcpp/try_copy_n.hpp>
 #include "varint.hpp"
 
 namespace mcpp::serialization {
@@ -389,79 +391,10 @@ namespace detail {
 
 enum class string_error {
   success = 0,
-  eof,
   negative_size
 };
 
 std::error_code make_error_code(string_error) noexcept;
-
-template<typename CharT,
-         typename RandomAccessIterator,
-         typename OutputIterator>
-std::pair<RandomAccessIterator,
-          OutputIterator> from_string_copy(RandomAccessIterator begin,
-                                           RandomAccessIterator end,
-                                           std::size_t n,
-                                           OutputIterator out,
-                                           std::error_code& ec,
-                                           const std::random_access_iterator_tag&)
-{
-  ec.clear();
-  std::size_t rem(end - begin);
-  if (rem < n) {
-    ec = make_error_code(string_error::eof);
-    return std::pair(end,
-                     out);
-  }
-  auto last = begin + n;
-  return std::pair(last,
-                   std::transform(begin,
-                                  last,
-                                  out,
-                                  [](auto b) noexcept { return std::to_integer<CharT>(b); }));
-}
-template<typename CharT,
-         typename InputIterator,
-         typename OutputIterator>
-std::pair<InputIterator,
-          OutputIterator> from_string_copy(InputIterator begin,
-                                           InputIterator end,
-                                           std::size_t n,
-                                           OutputIterator out,
-                                           std::error_code& ec,
-                                           const std::input_iterator_tag&)
-{
-  ec.clear();
-  std::size_t i = 0;
-  for (; (i < n) && (begin != end); ++begin, ++i) {
-    *(out++) = std::to_integer<CharT>(*begin);
-  }
-  if (i != n) {
-    ec = make_error_code(string_error::eof);
-  }
-  return std::pair(begin,
-                   out);
-}
-template<typename CharT,
-         typename InputIterator,
-         typename OutputIterator>
-std::pair<InputIterator,
-          OutputIterator> from_string_copy(InputIterator begin,
-                                           InputIterator end,
-                                           std::size_t n,
-                                           OutputIterator out,
-                                           std::error_code& ec)
-{
-  ec.clear();
-  typename std::iterator_traits<InputIterator>::iterator_category tag;
-  return detail::from_string_copy<CharT>(begin,
-                                         end,
-                                         n,
-                                         out,
-                                         ec,
-                                         tag);
-}
-
 
 }
 
@@ -518,11 +451,13 @@ std::pair<InputIterator,
     return std::pair(begin,
                      out);
   }
-  return detail::from_string_copy<CharT>(begin,
-                                         end,
-                                         pair.first,
-                                         out,
-                                         ec);
+  auto pair2 = mcpp::try_copy_n(begin,
+                                end,
+                                pair.first,
+                                mcpp::make_cast_output_iterator<CharT>(out),
+                                ec);
+  return std::pair(pair2.first,
+                   pair2.second.base());
 }
 /**
  *  Parses the Minecroft protocol representation of a string

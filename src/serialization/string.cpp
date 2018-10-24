@@ -2,7 +2,6 @@
 
 #include <string>
 #include <system_error>
-#include <boost/asio/error.hpp>
 #include <mcpp/system_error.hpp>
 
 namespace mcpp::serialization {
@@ -19,8 +18,6 @@ std::error_code make_error_code(string_error err) noexcept {
       switch (static_cast<string_error>(code)) {
       case string_error::success:
         return "Success";
-      case string_error::eof:
-        return "End of buffer while parsing string";
       case string_error::negative_size:
         return "String has negative size prefix";
       default:
@@ -32,8 +29,6 @@ std::error_code make_error_code(string_error err) noexcept {
       switch (static_cast<string_error>(code)) {
       case string_error::success:
         return std::error_condition();
-      case string_error::eof:
-        return to_error_code(make_error_code(boost::asio::error::eof)).default_error_condition();
       case string_error::negative_size:
         return make_error_code(std::errc::value_too_large).default_error_condition();
       default:
