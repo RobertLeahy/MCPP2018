@@ -1,5 +1,6 @@
 mcpp_add_library(testing
-                 SOURCES handler.cpp
+                 SOURCES allocator.cpp
+                         handler.cpp
                          object.cpp
                  LIBRARIES Boost::boost
                            Boost::system
