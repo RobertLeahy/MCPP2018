@@ -1,5 +1,6 @@
 mcpp_add_test(core
-              SOURCES any_storage.cpp
+              SOURCES allocate_unique.cpp
+                      any_storage.cpp
                       async_result.cpp
                       cast_output_iterator.cpp
                       main.cpp
