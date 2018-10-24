@@ -1,5 +1,6 @@
 mcpp_add_test(serialization
-              SOURCES main.cpp
+              SOURCES endian.cpp
+                      main.cpp
                       string.cpp
                       varint.cpp
               LIBRARIES Boost::boost
