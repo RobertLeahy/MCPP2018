@@ -1,5 +1,6 @@
 mcpp_add_test(core
               SOURCES any_storage.cpp
+                      cast_output_iterator.cpp
                       main.cpp
                       polymorphic_ptr.cpp
                       system_error.cpp
