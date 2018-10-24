@@ -32,6 +32,7 @@ class completion_handler : private handler {
 public:
   explicit completion_handler(completion_handler_state& state) noexcept;
   void operator()(boost::system::error_code ec);
+  void operator()(std::error_code ec);
 private:
   completion_handler_state* state_;
 };
@@ -46,8 +47,14 @@ public:
 class read_handler : private completion_handler {
 public:
   explicit read_handler(read_handler_state& state) noexcept;
-  void operator()(boost::system::error_code ec,
-                  std::size_t bytes_transferred);
+  template<typename ErrorCode>
+  void operator()(ErrorCode ec,
+                  std::size_t bytes_transferred)
+  {
+    assert(state_);
+    static_cast<completion_handler&>(*this)(ec);
+    state_->bytes_transferred = bytes_transferred;
+  }
 private:
   read_handler_state* state_;
 };

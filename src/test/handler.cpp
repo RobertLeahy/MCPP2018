@@ -37,9 +37,13 @@ completion_handler::completion_handler(completion_handler_state& state) noexcept
 {}
 
 void completion_handler::operator()(boost::system::error_code ec) {
+  (*this)(to_error_code(ec));
+}
+
+void completion_handler::operator()(std::error_code ec) {
   assert(state_);
   static_cast<handler&>(*this)();
-  state_->ec = to_error_code(ec);
+  state_->ec = ec;
 }
 
 read_handler_state::read_handler_state() noexcept
@@ -55,13 +59,5 @@ read_handler::read_handler(read_handler_state& state) noexcept
   : completion_handler(state),
     state_            (&state)
 {}
-
-void read_handler::operator()(boost::system::error_code ec,
-                              std::size_t bytes_transferred)
-{
-  assert(state_);
-  static_cast<completion_handler&>(*this)(ec);
-  state_->bytes_transferred = bytes_transferred;
-}
 
 }
