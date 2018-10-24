@@ -1,5 +1,6 @@
 mcpp_add_test(core
               SOURCES any_storage.cpp
+                      async_result.cpp
                       cast_output_iterator.cpp
                       main.cpp
                       polymorphic_ptr.cpp
@@ -8,4 +9,5 @@ mcpp_add_test(core
               LIBRARIES Boost::boost
                         Boost::system
                         Catch2::Catch2
-                        testing)
+                        testing
+                        Threads::Threads)
