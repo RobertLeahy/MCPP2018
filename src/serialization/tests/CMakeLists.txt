@@ -1,9 +1,12 @@
 mcpp_add_test(serialization
-              SOURCES endian.cpp
+              SOURCES async_read_varint.cpp
+                      endian.cpp
                       main.cpp
                       string.cpp
                       varint.cpp
               LIBRARIES Boost::boost
                         Boost::system
                         Catch2::Catch2
-                        core)
+                        core
+                        testing
+                        Threads::Threads)
