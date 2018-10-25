@@ -44,3 +44,10 @@ script:
   - cd build
   - ~/cmake/bin/cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++-8 -DBOOST_ROOT=$HOME/boost -DCMAKE_INSTALL_PREFIX=$HOME/Mcpp
   - ~/cmake/bin/cmake --build . --target install
+  - cd ..
+  - rm -r -f build
+  - mkdir build
+  - cd build
+  - ~/cmake/bin/cmake ../travis/install_test -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++-8 -DBOOST_ROOT=$HOME/boost -DCMAKE_PREFIX_PATH=$HOME/Mcpp
+  - ~/cmake/bin/cmake --build .
+  - ./bin/exec
