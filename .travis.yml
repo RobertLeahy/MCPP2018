@@ -29,7 +29,7 @@ script:
   - cd Catch2-master
   - mkdir build
   - cd build
-  - ~/cmake/bin/cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++-8 -DCMAKE_INSTALL_PREFIX=$HOME/Catch2
+  - ~/cmake/bin/cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++-8 -DCMAKE_INSTALL_PREFIX=$HOME/Catch2 -DCATCH_BUILD_TESTING=Off -DBUILD_TESTING=Off -DCATCH_BUILD_EXAMPLES=Off -DCATCH_INSTALL_DOCS=Off
   - ~/cmake/bin/cmake --build . --target install
   - popd
   - mkdir build
