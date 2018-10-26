@@ -32,6 +32,7 @@ function(mcpp_add_library target)
     endif()
     target_include_directories(${target} INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
                                                    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+    target_link_libraries(${target} INTERFACE ${ARG_LIBRARIES})
   endif()
   if(NOT ARG_NO_INSTALL)
     install(DIRECTORY "include/"
