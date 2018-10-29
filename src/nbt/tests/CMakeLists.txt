@@ -1,5 +1,6 @@
 mcpp_add_test(nbt
-              SOURCES main.cpp
+              SOURCES iterator_sax_writer.cpp
+                      main.cpp
                       sax_parse.cpp
               LIBRARIES Boost::boost
                         Catch2::Catch2
