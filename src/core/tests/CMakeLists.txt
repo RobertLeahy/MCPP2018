@@ -6,6 +6,7 @@ mcpp_add_test(core
                       completion_handler_base.cpp
                       main.cpp
                       polymorphic_ptr.cpp
+                      remove_optional.cpp
                       system_error.cpp
                       try_copy_n.cpp
               LIBRARIES Boost::boost
