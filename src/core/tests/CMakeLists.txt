@@ -3,6 +3,7 @@ mcpp_add_test(core
                       any_storage.cpp
                       async_result.cpp
                       cast_output_iterator.cpp
+                      checked.cpp
                       completion_handler_base.cpp
                       main.cpp
                       polymorphic_ptr.cpp
