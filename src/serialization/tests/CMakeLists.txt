@@ -1,5 +1,6 @@
 mcpp_add_test(serialization
               SOURCES async_read_varint.cpp
+                      async_write_varint.cpp
                       endian.cpp
                       main.cpp
                       string.cpp
