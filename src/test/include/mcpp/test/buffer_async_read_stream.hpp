@@ -3,7 +3,6 @@
 #include <cassert>
 #include <cstddef>
 #include <functional>
-#include <type_traits>
 #include <utility>
 #include <boost/asio/associated_executor.hpp>
 #include <boost/asio/bind_executor.hpp>
@@ -85,6 +84,7 @@ public:
     assert(ptr_ || !size_);
     ptr_ = ptr;
     size_ = size;
+    read_ = 0;
   }
 private:
   executor_type    ex_;
