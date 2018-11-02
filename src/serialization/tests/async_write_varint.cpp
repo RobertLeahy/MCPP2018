@@ -106,7 +106,7 @@ TEST_CASE("async_write_varint",
     CHECK(handlers != 0);
     REQUIRE(state.invoked);
     CHECK(state.ec);
-    CHECK(state.ec.default_error_condition() == to_error_code(make_error_code(boost::asio::error::eof)).default_error_condition());
+    CHECK(is_eof(state.ec));
     REQUIRE(state.bytes_transferred == 1);
     CHECK(out[0] == std::byte{0b10101100});
     CHECK(stream.written() == 1);

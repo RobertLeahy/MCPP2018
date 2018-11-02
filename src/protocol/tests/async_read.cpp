@@ -133,7 +133,7 @@ TEST_CASE("async_read (with intermediate initiating function)",
     CHECK_FALSE(after_read_state.invoked);
     CHECK(state.invoked);
     CHECK(state.ec);
-    CHECK(state.ec.default_error_condition() == to_error_code(make_error_code(boost::asio::error::eof)).default_error_condition());
+    CHECK(is_eof(state.ec));
   }
   SECTION("Empty") {
     in.push_back(std::byte{0});
@@ -242,7 +242,7 @@ TEST_CASE("async_read (with intermediate initiating function)",
     CHECK_FALSE(after_read_state.invoked);
     CHECK(state.invoked);
     CHECK(state.ec);
-    CHECK(state.ec.default_error_condition() == to_error_code(make_error_code(boost::asio::error::eof)).default_error_condition());
+    CHECK(is_eof(state.ec));
     CHECK(state.bytes_transferred == 0);
     CHECK(stream.read() == 5);
     REQUIRE(out.size() == 5);
@@ -323,7 +323,7 @@ TEST_CASE("async_read (no intermediate initiating function)",
     CHECK(handlers);
     CHECK(state.invoked);
     CHECK(state.ec);
-    CHECK(state.ec.default_error_condition() == to_error_code(make_error_code(boost::asio::error::eof)).default_error_condition());
+    CHECK(is_eof(state.ec));
     CHECK(state.bytes_transferred == 0);
     CHECK(stream.read() == 5);
     REQUIRE(out.size() == 3);

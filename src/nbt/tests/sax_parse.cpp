@@ -142,13 +142,13 @@ TEST_CASE("sax_parse",
                                 ec);
         CHECK(result == in.end());
         CHECK(ec);
-        CHECK(ec.default_error_condition() == to_error_code(make_error_code(boost::asio::error::eof)).default_error_condition());
+        CHECK(is_eof(ec));
         REQUIRE_FALSE(observer.events.empty());
         INFO(observer.events.back().index());
         auto error = std::get<test::sax_observer::error_event>(observer.events.back());
         CHECK(error.where == in.end());
         CHECK(error.ec);
-        CHECK(error.ec.default_error_condition() == to_error_code(make_error_code(boost::asio::error::eof)).default_error_condition());
+        CHECK(is_eof(error.ec));
       }
     }
   }
@@ -246,13 +246,13 @@ TEST_CASE("sax_parse",
                                 ec);
         CHECK(result == in.end());
         CHECK(ec);
-        CHECK(ec.default_error_condition() == to_error_code(make_error_code(boost::asio::error::eof)).default_error_condition());
+        CHECK(is_eof(ec));
         REQUIRE_FALSE(observer.events.empty());
         INFO(observer.events.back().index());
         auto error = std::get<test::sax_observer::error_event>(observer.events.back());
         CHECK(error.where == in.end());
         CHECK(error.ec);
-        CHECK(error.ec.default_error_condition() == to_error_code(make_error_code(boost::asio::error::eof)).default_error_condition());
+        CHECK(is_eof(error.ec));
       }
     }
   }

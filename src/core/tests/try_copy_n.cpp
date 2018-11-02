@@ -25,7 +25,7 @@ TEST_CASE("try_copy_n w/RandomAccessIterator",
                            std::back_inserter(out),
                            ec);
     CHECK(ec);
-    CHECK(to_error_code(make_error_code(boost::asio::error::eof)).default_error_condition() == ec.default_error_condition());
+    CHECK(is_eof(ec));
     CHECK(pair.first == in.end());
   }
   SECTION("Success") {
@@ -68,7 +68,7 @@ TEST_CASE("try_copy_n w/InputIterator",
                            std::back_inserter(out),
                            ec);
     CHECK(ec);
-    CHECK(to_error_code(make_error_code(boost::asio::error::eof)).default_error_condition() == ec.default_error_condition());
+    CHECK(is_eof(ec));
     CHECK(pair.first == in.end());
   }
   SECTION("Success") {

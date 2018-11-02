@@ -120,7 +120,7 @@ TEST_CASE("from_string",
                                          buffer.end(),
                                          ec);
     CHECK(ec);
-    CHECK(to_error_code(make_error_code(boost::asio::error::eof)).default_error_condition() == ec.default_error_condition());
+    CHECK(is_eof(ec));
     CHECK(pair.second == buffer.end());
     CHECK(pair.first == "");
   }
@@ -146,7 +146,7 @@ TEST_CASE("from_string",
                                          l.end(),
                                          ec);
     CHECK(ec);
-    CHECK(to_error_code(make_error_code(boost::asio::error::eof)).default_error_condition() == ec.default_error_condition());
+    CHECK(is_eof(ec));
     CHECK(pair.second == l.end());
     CHECK(pair.first == "");
   }

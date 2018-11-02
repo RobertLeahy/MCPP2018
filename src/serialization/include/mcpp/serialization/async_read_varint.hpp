@@ -72,7 +72,7 @@ public:
                                                     end,
                                                     sec);
     if (sec) {
-      if (sec.default_error_condition() == to_error_code(make_error_code(boost::asio::error::eof)).default_error_condition()) {
+      if (mcpp::is_eof(sec)) {
         initiate();
         return;
       }

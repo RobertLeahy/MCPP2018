@@ -124,7 +124,7 @@ TEST_CASE("from_varint",
                                  vec.end(),
                                  ec);
     CHECK(ec);
-    CHECK(to_error_code(make_error_code(boost::asio::error::eof)).default_error_condition() == ec.default_error_condition());
+    CHECK(is_eof(ec));
     CHECK(pair.second == vec.end());
   }
   SECTION("End of file") {
@@ -133,7 +133,7 @@ TEST_CASE("from_varint",
                                  vec.end(),
                                  ec);
     CHECK(ec);
-    CHECK(to_error_code(make_error_code(boost::asio::error::eof)).default_error_condition() == ec.default_error_condition());
+    CHECK(is_eof(ec));
     CHECK(pair.second == vec.end());
   }
   SECTION("Single byte") {

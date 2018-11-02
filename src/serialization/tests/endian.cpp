@@ -71,7 +71,7 @@ TEST_CASE("from_endian",
                                            ec);
     CHECK(pair.second == buffer.end());
     CHECK(ec);
-    CHECK(ec.default_error_condition() == to_error_code(make_error_code(boost::asio::error::eof)).default_error_condition());
+    CHECK(is_eof(ec));
   }
   SECTION("Floating point") {
     static_assert(sizeof(float) == 4);

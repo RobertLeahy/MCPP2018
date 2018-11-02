@@ -149,7 +149,7 @@ TEST_CASE("async_read_varint",
     CHECK(state.ec);
     CHECK(state.bytes_transferred == 1);
     CHECK(stream.read() == 1);
-    CHECK(state.ec.default_error_condition() == to_error_code(make_error_code(boost::asio::error::eof)).default_error_condition());
+    CHECK(is_eof(state.ec));
   }
   SECTION("Receive DynamicBuffer") {
     buffer.push_back(std::byte{0b11111111});
@@ -209,7 +209,7 @@ TEST_CASE("async_read_varint",
     CHECK(handlers != 0);
     REQUIRE(state.invoked);
     CHECK(state.ec);
-    CHECK(state.ec.default_error_condition() == to_error_code(make_error_code(boost::asio::error::eof)).default_error_condition());
+    CHECK(is_eof(state.ec));
     CHECK(state.bytes_transferred == 0);
     CHECK(stream.read() == 7);
     REQUIRE(state.dynamic_buffer);

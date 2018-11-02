@@ -7,6 +7,7 @@
 #include <boost/asio/error.hpp>
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/post.hpp>
+#include <mcpp/system_error.hpp>
 #include <mcpp/test/handler.hpp>
 
 #include <catch2/catch.hpp>
@@ -90,7 +91,7 @@ TEST_CASE("buffer_async_read_stream::async_read_some",
     REQUIRE(state.invoked);
     CHECK(state.ec);
     CHECK(state.bytes_transferred == 0);
-    CHECK(state.ec.default_error_condition() == make_error_code(boost::asio::error::eof).default_error_condition());
+    CHECK(is_eof(state.ec));
     CHECK(stream.read() == 0);
   }
   SECTION("Empty buffer => empty buffer") {

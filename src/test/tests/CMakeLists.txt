@@ -4,4 +4,5 @@ mcpp_add_test(testing
               LIBRARIES Boost::boost
                         Boost::system
                         Catch2::Catch2
+                        core
                         testing)
