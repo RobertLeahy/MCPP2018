@@ -5,6 +5,7 @@ mcpp_add_test(core
                       cast_output_iterator.cpp
                       checked.cpp
                       completion_handler_base.cpp
+                      lowest_layer.cpp
                       main.cpp
                       polymorphic_ptr.cpp
                       prefix_buffer_sequence.cpp
