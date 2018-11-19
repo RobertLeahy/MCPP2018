@@ -1,4 +1,6 @@
 mcpp_add_test(crypto
-              SOURCES main.cpp
+              SOURCES evp_cipher_ctx.cpp
+                      main.cpp
               LIBRARIES Catch2::Catch2
-                        crypto)
+                        crypto
+                        testing)
