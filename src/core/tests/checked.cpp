@@ -173,11 +173,11 @@ TEST_CASE("checked_add (integers)") {
 TEST_CASE("checked_add (optional)") {
   SECTION("Both optional, empty") {
     std::optional<unsigned> u;
-    std::optional<long> i;
+    std::optional<long long> i;
     auto result = checked_add(u,
                               i);
     static_assert(std::is_same_v<decltype(result),
-                                 std::optional<long>>);
+                                 std::optional<long long>>);
     CHECK_FALSE(result);
     result = checked_add(i,
                          u);
@@ -185,11 +185,11 @@ TEST_CASE("checked_add (optional)") {
   }
   SECTION("Both optional, one empty") {
     std::optional<unsigned> u;
-    std::optional<long> i(5);
+    std::optional<long long> i(5);
     auto result = checked_add(u,
                               i);
     static_assert(std::is_same_v<decltype(result),
-                                 std::optional<long>>);
+                                 std::optional<long long>>);
     CHECK_FALSE(result);
     result = checked_add(i,
                          u);
@@ -197,11 +197,11 @@ TEST_CASE("checked_add (optional)") {
   }
   SECTION("Both optional, none empty") {
     std::optional<unsigned> u(1);
-    std::optional<long> i(5);
+    std::optional<long long> i(5);
     auto result = checked_add(u,
                               i);
     static_assert(std::is_same_v<decltype(result),
-                                 std::optional<long>>);
+                                 std::optional<long long>>);
     REQUIRE(result);
     CHECK(*result == 6);
     result = checked_add(i,
@@ -251,12 +251,12 @@ TEST_CASE("checked_multiply (integers)") {
   SECTION("No overflow, 3 operands") {
     int i = 2;
     unsigned u = 4;
-    long l = 5;
+    long long l = 5;
     auto result = checked_multiply(i,
                                    u,
                                    l);
     static_assert(std::is_same_v<decltype(result),
-                                 std::optional<long>>);
+                                 std::optional<long long>>);
     REQUIRE(result);
     CHECK(*result == 40);
   }
