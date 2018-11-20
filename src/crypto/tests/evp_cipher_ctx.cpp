@@ -48,16 +48,15 @@ TEST_CASE("evp_cipher_update (MutableBufferSequence)",
                                            boost::asio::buffer(out));
     REQUIRE_FALSE(ec);
     unsigned char decrypted[16];
-    int result = ::EVP_CIPHER_CTX_reset(ctx.native_handle());
-    REQUIRE(result);
-    result = ::EVP_CipherInit_ex(ctx.native_handle(),
+    evp_cipher_ctx ctx2;
+    result = ::EVP_CipherInit_ex(ctx2.native_handle(),
                                  ::EVP_aes_128_cfb(),
                                  nullptr,
                                  key,
                                  iv,
                                  false);
     REQUIRE(result);
-    ec = evp_cipher_update(ctx.native_handle(),
+    ec = evp_cipher_update(ctx2.native_handle(),
                            boost::asio::buffer(out),
                            boost::asio::buffer(decrypted));
     REQUIRE_FALSE(ec);
@@ -97,9 +96,8 @@ TEST_CASE("evp_cipher_update (MutableBufferSequence)",
     REQUIRE_FALSE(ec);
     CHECK(out.size() == 5);
     CHECK(d.data().size() == 5);
-    int result = ::EVP_CIPHER_CTX_reset(ctx.native_handle());
-    REQUIRE(result);
-    result = ::EVP_CipherInit_ex(ctx.native_handle(),
+    evp_cipher_ctx ctx2;
+    result = ::EVP_CipherInit_ex(ctx2.native_handle(),
                                  ::EVP_aes_128_cfb(),
                                  nullptr,
                                  key,
@@ -108,7 +106,7 @@ TEST_CASE("evp_cipher_update (MutableBufferSequence)",
     REQUIRE(result);
     vector_type decrypted;
     dynamic_buffer_type decrypted_buffer(decrypted);
-    auto d2 = evp_cipher_update(ctx.native_handle(),
+    auto d2 = evp_cipher_update(ctx2.native_handle(),
                                 d.data(),
                                 std::move(decrypted_buffer),
                                 ec);
