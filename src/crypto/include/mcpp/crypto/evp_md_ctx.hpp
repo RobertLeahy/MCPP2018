@@ -8,6 +8,7 @@
 #include <boost/asio/buffer.hpp>
 #include <boost/core/noncopyable.hpp>
 #include <openssl/evp.h>
+#include "system_error.hpp"
 
 namespace mcpp::crypto {
 
@@ -69,17 +70,6 @@ private:
   native_handle_type ctx_;
 };
 
-namespace detail {
-
-enum class evp_digest_error {
-  success = 0,
-  update_failed
-};
-
-std::error_code make_error_code(evp_digest_error) noexcept;
-
-}
-
 /**
  *  Calls `EVP_UpdateDigest` some number of times as
  *  necessary. The number of times `EVP_UpdateDigest`
@@ -115,7 +105,7 @@ std::error_code evp_digest_update(evp_md_ctx::native_handle_type handle,
                                     buffer.data(),
                                     buffer.size());
     if (!result) {
-      return make_error_code(detail::evp_digest_error::update_failed);
+      return crypto::get_error_code();
     }
   }
   return std::error_code();

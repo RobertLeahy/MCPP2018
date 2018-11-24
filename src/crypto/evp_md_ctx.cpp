@@ -2,8 +2,6 @@
 
 #include <cassert>
 #include <new>
-#include <string>
-#include <system_error>
 #include <openssl/evp.h>
 #include <openssl/opensslv.h>
 
@@ -64,32 +62,6 @@ void evp_md_ctx::destroy() noexcept {
   if (ctx_) {
     evp_md_ctx_free(ctx_);
   }
-}
-
-namespace detail {
-
-std::error_code make_error_code(evp_digest_error err) noexcept {
-  static const class : public std::error_category {
-  public:
-    virtual const char* name() const noexcept override {
-      return "MCPP/Crypto/EVP Message Digest";
-    }
-    virtual std::string message(int code) const override {
-      switch (static_cast<evp_digest_error>(code)) {
-      case evp_digest_error::success:
-        return "Success";
-      case evp_digest_error::update_failed:
-        return "EVP_DigestUpdate failed";
-      default:
-        break;
-      }
-      return "Unknown";
-    }
-  } category;
-  return std::error_code(static_cast<int>(err),
-                         category);
-}
-
 }
 
 }

@@ -7,6 +7,7 @@
 #include <system_error>
 #include <utility>
 #include <mcpp/checked.hpp>
+#include <mcpp/crypto/system_error.hpp>
 #include <openssl/evp.h>
 
 namespace mcpp::crypto {
@@ -64,10 +65,6 @@ std::error_code make_error_code(evp_cipher_error err) noexcept {
         return "Overflow converting output size";
       case evp_cipher_error::in_overflow:
         return "Overflow converting input size";
-      case evp_cipher_error::update_failed:
-        return "EVP_CipherUpdate failed";
-      case evp_cipher_error::final_failed:
-        return "EVP_CipherFinal_ex failed";
       default:
         break;
       }
@@ -81,8 +78,6 @@ std::error_code make_error_code(evp_cipher_error err) noexcept {
       case evp_cipher_error::out_overflow:
       case evp_cipher_error::in_overflow:
         return make_error_code(std::errc::value_too_large).default_error_condition();
-      case evp_cipher_error::update_failed:
-      case evp_cipher_error::final_failed:
       default:
         break;
       }
@@ -118,8 +113,7 @@ std::pair<boost::asio::const_buffer,
                                   reinterpret_cast<const unsigned char*>(retr.first.data()),
                                   *inl);
   if (!result) {
-    //  TODO: Better error code
-    ec = make_error_code(evp_cipher_error::update_failed);
+    ec = crypto::get_error_code();
     return retr;
   }
   assert(outl == *inl);

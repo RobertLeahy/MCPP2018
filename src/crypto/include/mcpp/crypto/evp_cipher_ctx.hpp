@@ -80,9 +80,7 @@ enum class evp_cipher_error {
   success = 0,
   overflow,
   out_overflow,
-  in_overflow,
-  update_failed,
-  final_failed
+  in_overflow
 };
 
 std::error_code make_error_code(evp_cipher_error) noexcept;
