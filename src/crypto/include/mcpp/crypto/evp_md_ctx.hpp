@@ -6,69 +6,27 @@
 
 #include <system_error>
 #include <boost/asio/buffer.hpp>
-#include <boost/core/noncopyable.hpp>
+#include <mcpp/handle.hpp>
 #include <openssl/evp.h>
 #include "system_error.hpp"
 
 namespace mcpp::crypto {
 
-/**
- *  An RAII wrapper for an `EVP_MD_CTX`.
- */
-class evp_md_ctx : private boost::noncopyable {
+namespace detail {
+
+class evp_md_ctx_policy : public pointer_handle_policy_base<::EVP_MD_CTX*> {
 public:
-  /**
-   *  A type alias for `EVP_MD_CTX*`.
-   */
-  using native_handle_type = ::EVP_MD_CTX*;
-  /**
-   *  Creates an `EVP_MD_CTX` by calling
-   *  `EVP_MD_CTX_new`.
-   */
-  evp_md_ctx();
-  /**
-   *  Assumes ownership of the `EVP_MD_CTX`
-   *  owned by another object.
-   *
-   *  \param [in] other
-   *    The object ownership of whose `EVP_MD_CTX`
-   *    shall be assumed. After this constructor completes
-   *    successfully it shall be safe to allow this
-   *    object's lifetime to end or assign to it, the
-   *    behavior of all other operations is undefined.
-   */
-  evp_md_ctx(evp_md_ctx&& other) noexcept;
-  /**
-   *  Replaces the owned `EVP_MD_CTX` (if any)
-   *  with the `EVP_MD_CTX` owned by another
-   *  object.
-   *
-   *  \param [in] rhs
-   *    The object ownership of whose `EVP_MD_CTX`
-   *    shall be assumed. After this function completes
-   *    successfully it shall be safe to allow this
-   *    object's lifetime to end or assign to it, the
-   *    behavior of all other operations is undefined.
-   *
-   *  \return
-   *    A reference to this object.
-   */
-  evp_md_ctx& operator=(evp_md_ctx&& rhs) noexcept;
-  /**
-   *  Calls `EVP_MD_CTX_free` if necessary.
-   */
-  ~evp_md_ctx() noexcept;
-  /**
-   *  Retrieves the owned `EVP_MD_CTX`.
-   *
-   *  \return
-   *    A pointer to the owned `EVP_MD_CTX`.
-   */
-  native_handle_type native_handle() noexcept;
-private:
-  void destroy() noexcept;
-  native_handle_type ctx_;
+  static native_handle_type create();
+  static void destroy(native_handle_type) noexcept;
 };
+
+}
+
+/**
+ *  An instantiation of the \ref mcpp::handle "handle class template"
+ *  which manages an `EVP_CIPHER_CTX*`.
+ */
+using evp_md_ctx = handle<detail::evp_md_ctx_policy>;
 
 /**
  *  Calls `EVP_UpdateDigest` some number of times as

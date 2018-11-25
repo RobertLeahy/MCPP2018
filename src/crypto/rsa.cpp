@@ -5,47 +5,21 @@
 
 namespace mcpp::crypto {
 
-rsa::rsa()
-  : handle_(::RSA_new())
-{
-  if (!handle_) {
+namespace detail {
+
+rsa_policy::native_handle_type rsa_policy::create() {
+  native_handle_type retr = ::RSA_new();
+  if (!retr) {
     throw std::bad_alloc();
   }
+  return retr;
 }
 
-rsa::rsa(native_handle_type handle) noexcept
-  : handle_(handle)
-{
-  assert(handle_);
+void rsa_policy::destroy(native_handle_type handle) noexcept {
+  assert(handle);
+  ::RSA_free(handle);
 }
 
-rsa::rsa(rsa&& other) noexcept
-  : handle_(other.handle_)
-{
-  other.handle_ = nullptr;
-}
-
-rsa& rsa::operator=(rsa&& rhs) noexcept {
-  assert(this != &rhs);
-  destroy();
-  handle_ = rhs.handle_;
-  rhs.handle_ = nullptr;
-  return *this;
-}
-
-rsa::~rsa() noexcept {
-  destroy();
-}
-
-rsa::native_handle_type rsa::native_handle() noexcept {
-  assert(handle_);
-  return handle_;
-}
-
-void rsa::destroy() noexcept {
-  if (handle_) {
-    ::RSA_free(handle_);
-  }
 }
 
 }

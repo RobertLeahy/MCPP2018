@@ -7,17 +7,24 @@
 
 namespace mcpp::crypto {
 
-static evp_md_ctx::native_handle_type evp_md_ctx_new() noexcept {
-  return ::
+namespace detail {
+
+evp_md_ctx_policy::native_handle_type evp_md_ctx_policy::create() {
+  native_handle_type retr = ::
 #if OPENSSL_VERSION_NUMBER >= 0x10100000
   EVP_MD_CTX_new
 #else
   EVP_MD_CTX_create
 #endif
   ();
+  if (!retr) {
+    throw std::bad_alloc();
+  }
+  return retr;
 }
 
-static void evp_md_ctx_free(evp_md_ctx::native_handle_type handle) noexcept {
+void evp_md_ctx_policy::destroy(native_handle_type handle) noexcept {
+  assert(handle);
   ::
 #if OPENSSL_VERSION_NUMBER >= 0x10100000
   EVP_MD_CTX_free
@@ -27,41 +34,6 @@ static void evp_md_ctx_free(evp_md_ctx::native_handle_type handle) noexcept {
   (handle);
 }
 
-evp_md_ctx::evp_md_ctx()
-  : ctx_(evp_md_ctx_new())
-{
-  if (!ctx_) {
-    throw std::bad_alloc();
-  }
-}
-
-evp_md_ctx::evp_md_ctx(evp_md_ctx&& other) noexcept
-  : ctx_(other.ctx_)
-{
-  other.ctx_ = nullptr;
-}
-
-evp_md_ctx& evp_md_ctx::operator=(evp_md_ctx&& rhs) noexcept {
-  assert(this != &rhs);
-  destroy();
-  ctx_ = rhs.ctx_;
-  rhs.ctx_ = nullptr;
-  return *this;
-}
-
-evp_md_ctx::~evp_md_ctx() noexcept {
-  destroy();
-}
-
-evp_md_ctx::native_handle_type evp_md_ctx::native_handle() noexcept {
-  assert(ctx_);
-  return ctx_;
-}
-
-void evp_md_ctx::destroy() noexcept {
-  if (ctx_) {
-    evp_md_ctx_free(ctx_);
-  }
 }
 
 }
