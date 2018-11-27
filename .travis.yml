@@ -31,10 +31,18 @@ script:
   - cd build
   - ~/cmake/bin/cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++-8 -DCMAKE_INSTALL_PREFIX=$HOME/Catch2 -DCATCH_BUILD_TESTING=Off -DBUILD_TESTING=Off -DCATCH_BUILD_EXAMPLES=Off -DCATCH_INSTALL_DOCS=Off
   - ~/cmake/bin/cmake --build . --target install
+  - cd ~
+  - wget https://github.com/Tencent/rapidjson/archive/master.zip -O rapidjson.zip
+  - unzip rapidjson.zip
+  - cd rapidjson-master
+  - mkdir build
+  - cd build
+  - ~/cmake/bin/cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++-8 -DCMAKE_INSTALL_PREFIX=$HOME/rapidjson -DBUILD_TESTING=Off
+  - ~/cmake/bin/cmake --build . --target install
   - popd
   - mkdir build
   - cd build
-  - ~/cmake/bin/cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++-8 -DBOOST_ROOT=$HOME/boost -DCMAKE_PREFIX_PATH=$HOME/Catch2
+  - ~/cmake/bin/cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++-8 -DBOOST_ROOT=$HOME/boost -DCMAKE_PREFIX_PATH="$HOME/Catch2;$HOME/rapidjson"
   - ~/cmake/bin/cmake --build .
   - ~/cmake/bin/ctest -VV
   - cd ..
@@ -42,12 +50,12 @@ script:
   - rm -r -f ~/Catch2
   - mkdir build
   - cd build
-  - ~/cmake/bin/cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++-8 -DBOOST_ROOT=$HOME/boost -DCMAKE_INSTALL_PREFIX=$HOME/Mcpp
+  - ~/cmake/bin/cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++-8 -DBOOST_ROOT=$HOME/boost -DCMAKE_INSTALL_PREFIX=$HOME/Mcpp -DCMAKE_PREFIX_PATH=$HOME/rapidjson
   - ~/cmake/bin/cmake --build . --target install
   - cd ..
   - rm -r -f build
   - mkdir build
   - cd build
-  - ~/cmake/bin/cmake ../travis/install_test -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++-8 -DBOOST_ROOT=$HOME/boost -DCMAKE_PREFIX_PATH=$HOME/Mcpp
+  - ~/cmake/bin/cmake ../travis/install_test -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++-8 -DBOOST_ROOT=$HOME/boost -DCMAKE_PREFIX_PATH="$HOME/Mcpp;$HOME/rapidjson"
   - ~/cmake/bin/cmake --build .
   - ./bin/exec

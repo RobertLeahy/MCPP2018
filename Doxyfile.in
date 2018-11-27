@@ -3,6 +3,7 @@ PROJECT_BRIEF="Minecraft utilities in C++"
 OUTPUT_DIRECTORY="doc"
 INPUT=${CMAKE_SOURCE_DIR}/src/core/include          \
       ${CMAKE_SOURCE_DIR}/src/nbt/include           \
+      ${CMAKE_SOURCE_DIR}/src/rapidjson/include     \
       ${CMAKE_SOURCE_DIR}/src/serialization/include \
       ${CMAKE_SOURCE_DIR}/src/protocol/include      \
       ${CMAKE_SOURCE_DIR}/src/zlib/include
