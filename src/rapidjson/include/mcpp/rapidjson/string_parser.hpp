@@ -9,6 +9,7 @@
 #include <memory>
 #include <string>
 #include "done_parser_base.hpp"
+#include "parser_base.hpp"
 
 namespace mcpp::rapidjson {
 
