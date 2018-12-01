@@ -10,40 +10,28 @@
 #include <mcpp/rapidjson/state_machine_parser_base.hpp>
 #include <mcpp/rapidjson/string.hpp>
 #include <mcpp/rapidjson/string_parser.hpp>
-#include <mcpp/rapidjson/uint_parser.hpp>
 
 namespace mcpp::yggdrasil {
 
 /**
- *  An agent object to be sent to (and received by)
- *  the Yggdrasil API. Describes the requesting
- *  application.
+ *  Represents a property object used in the
+ *  Yggdrasil API.
  */
-class agent {
+class property {
 public:
-  /**
-   *  The name of the requesting application. Known
-   *  valid values are:
-   *
-   *  - &quot;Minecraft&quot;
-   *  - &quot;Scrolls&quot;
-   */
   std::string name;
-  /**
-   *  Currently always `1`.
-   */
-  unsigned version = 1;
+  std::string value;
 };
 
 /**
- *  Transforms an \ref agent object into a sequence
- *  of SAX events.
+ *  Transforms a \ref property object
+ *  into a sequence of SAX events.
  *
  *  \tparam Writer
  *    A RapidJSON-compatible `Writer` type.
  *
  *  \param [in] obj
- *    The \ref agent object.
+ *    The \ref property object.
  *  \param [in, out] writer
  *    A `Writer` object which shall receive the SAX events
  *    corresponding to `obj`.
@@ -55,7 +43,7 @@ public:
  *    `false` (the function instead returns immediately).
  */
 template<typename Writer>
-bool to_json(const agent& obj,
+bool to_json(const property& obj,
              Writer& writer)
 {
   return writer.StartObject()      &&
@@ -63,38 +51,37 @@ bool to_json(const agent& obj,
                         writer)    &&
          rapidjson::string(obj.name,
                            writer) &&
-         rapidjson::key("version",
+         rapidjson::key("value",
                         writer)    &&
-         writer.Uint(obj.version)  &&
+         rapidjson::string(obj.value,
+                           writer) &&
          writer.EndObject();
 }
 
 /**
- *  A read-only RapidJSON `Reader` which parses
- *  \ref agent objects from a series of SAX
- *  events.
+ *  Receives SAX events by being a RapidJSON `Reader`
+ *  and transforms them into a \ref property
+ *  object if appropriate.
  */
-class agent_parser
+class property_parser
 #ifndef MCPP_DOXYGEN_RUNNING
-: public rapidjson::state_machine_parser_base<rapidjson::string_parser,
-                                              rapidjson::uint_parser>
+: public rapidjson::state_machine_parser_base<rapidjson::string_parser>
 #endif
 {
 private:
-  using base = rapidjson::state_machine_parser_base<rapidjson::string_parser,
-                                                    rapidjson::uint_parser>;
+  using base = rapidjson::state_machine_parser_base<rapidjson::string_parser>;
 public:
   /**
-   *  Creates an agent_parser object which parses
-   *  into a certain \ref agent object.
+   *  Creates a new property_parser which parses
+   *  into a certain \ref property object.
    *
-   *  \param [in] a
-   *    A reference to an \ref agent object into
+   *  \param [in] p
+   *    A reference to the \ref property object into
    *    which to parse. Reference must remain valid until members
    *    of the newly-created object are no longer liable to be
    *    called or the behavior is undefined.
    */
-  explicit agent_parser(agent& a) noexcept;
+  explicit property_parser(property& p) noexcept;
 #ifndef MCPP_DOXYGEN_RUNNING
   void clear() noexcept;
   bool done() const noexcept;
@@ -105,11 +92,11 @@ public:
            bool);
 #endif
 private:
-  agent* obj_;
-  bool   begin_;
-  bool   end_;
-  bool   name_;
-  bool   version_;
+  property* obj_;
+  bool      begin_;
+  bool      end_;
+  bool      name_;
+  bool      value_;
 };
 
 }

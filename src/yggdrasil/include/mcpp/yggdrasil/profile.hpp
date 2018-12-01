@@ -6,44 +6,34 @@
 
 #include <cstddef>
 #include <string>
+#include <mcpp/rapidjson/bool_parser.hpp>
 #include <mcpp/rapidjson/key.hpp>
 #include <mcpp/rapidjson/state_machine_parser_base.hpp>
 #include <mcpp/rapidjson/string.hpp>
 #include <mcpp/rapidjson/string_parser.hpp>
-#include <mcpp/rapidjson/uint_parser.hpp>
 
 namespace mcpp::yggdrasil {
 
 /**
- *  An agent object to be sent to (and received by)
- *  the Yggdrasil API. Describes the requesting
- *  application.
+ *  Represents a profile object used in the
+ *  Yggdrasil API.
  */
-class agent {
+class profile {
 public:
-  /**
-   *  The name of the requesting application. Known
-   *  valid values are:
-   *
-   *  - &quot;Minecraft&quot;
-   *  - &quot;Scrolls&quot;
-   */
+  std::string id;
   std::string name;
-  /**
-   *  Currently always `1`.
-   */
-  unsigned version = 1;
+  bool        legacy = false;
 };
 
 /**
- *  Transforms an \ref agent object into a sequence
- *  of SAX events.
+ *  Transforms a \ref profile object
+ *  into a sequence of SAX events.
  *
  *  \tparam Writer
  *    A RapidJSON-compatible `Writer` type.
  *
  *  \param [in] obj
- *    The \ref agent object.
+ *    The \ref profile object.
  *  \param [in, out] writer
  *    A `Writer` object which shall receive the SAX events
  *    corresponding to `obj`.
@@ -55,46 +45,51 @@ public:
  *    `false` (the function instead returns immediately).
  */
 template<typename Writer>
-bool to_json(const agent& obj,
+bool to_json(const profile& obj,
              Writer& writer)
 {
   return writer.StartObject()      &&
+         rapidjson::key("id",
+                        writer)    &&
+         rapidjson::string(obj.id,
+                           writer) &&
          rapidjson::key("name",
                         writer)    &&
          rapidjson::string(obj.name,
                            writer) &&
-         rapidjson::key("version",
-                        writer)    &&
-         writer.Uint(obj.version)  &&
+         (!obj.legacy ||
+          (rapidjson::key("legacy",
+                          writer) &&
+           writer.Bool(true)))     &&
          writer.EndObject();
 }
 
 /**
- *  A read-only RapidJSON `Reader` which parses
- *  \ref agent objects from a series of SAX
- *  events.
+ *  Receives SAX events by being a RapidJSON `Reader`
+ *  and transforms them into a \ref profile
+ *  object if appropriate.
  */
-class agent_parser
+class profile_parser
 #ifndef MCPP_DOXYGEN_RUNNING
 : public rapidjson::state_machine_parser_base<rapidjson::string_parser,
-                                              rapidjson::uint_parser>
+                                              rapidjson::bool_parser>
 #endif
 {
 private:
   using base = rapidjson::state_machine_parser_base<rapidjson::string_parser,
-                                                    rapidjson::uint_parser>;
+                                                    rapidjson::bool_parser>;
 public:
   /**
-   *  Creates an agent_parser object which parses
-   *  into a certain \ref agent object.
+   *  Creates a new profile_parser which parses
+   *  into a certain \ref profile object.
    *
-   *  \param [in] a
-   *    A reference to an \ref agent object into
+   *  \param [in] p
+   *    A reference to the \ref profile object into
    *    which to parse. Reference must remain valid until members
    *    of the newly-created object are no longer liable to be
    *    called or the behavior is undefined.
    */
-  explicit agent_parser(agent& a) noexcept;
+  explicit profile_parser(profile& p) noexcept;
 #ifndef MCPP_DOXYGEN_RUNNING
   void clear() noexcept;
   bool done() const noexcept;
@@ -105,11 +100,12 @@ public:
            bool);
 #endif
 private:
-  agent* obj_;
-  bool   begin_;
-  bool   end_;
-  bool   name_;
-  bool   version_;
+  profile* obj_;
+  bool     begin_;
+  bool     end_;
+  bool     id_;
+  bool     name_;
+  bool     legacy_;
 };
 
 }
