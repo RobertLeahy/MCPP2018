@@ -23,7 +23,7 @@ std::error_code to_error_code(boost::system::error_code ec) noexcept;
 /**
  *  Returns its argument untouched.
  *
- *  This overload is provided to allow `mcpp::is_error_code`
+ *  This overload is provided to allow `mcpp::to_error_code`
  *  to be used in generic contexts to coalesce both
  *  `std::error_code` and `boost::system::error_code` to
  *  `std::error_code`.
