@@ -6,6 +6,7 @@ mcpp_add_test(core
                       checked.cpp
                       completion_handler_base.cpp
                       handle.cpp
+                      hex_dump.cpp
                       lowest_layer.cpp
                       main.cpp
                       polymorphic_ptr.cpp
