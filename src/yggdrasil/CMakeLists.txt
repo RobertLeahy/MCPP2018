@@ -12,4 +12,5 @@ mcpp_add_library(yggdrasil
                            core
                            rapidjson
                            RapidJSON::RapidJSON)
+add_subdirectory(example)
 add_subdirectory(tests)
